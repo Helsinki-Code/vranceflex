@@ -9,9 +9,9 @@ import {
 import { canAccessAnalytics } from "@/server/permissions"
 import { auth } from "@clerk/nextjs/server"
 import { ChevronDownIcon, SearchCheck } from "lucide-react"
-import { ViewsByCountryChart } from "../_components/charts/ViewsByCountryChart"
-import { ViewsByPPPChart } from "../_components/charts/ViewsByPPPChart"
-import { ViewsByDayChart } from "../_components/charts/ViewsByDayChart"
+import { ViewsByCountryChart } from "@/app/dashboard/_components/charts/ViewsByCountryChart"
+import { ViewsByPPPChart } from "@/app/dashboard/_components/charts/ViewsByPPPChart"
+import { ViewsByDayChart } from "@/app/dashboard/_components/charts/ViewsByDayChart"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { createURL } from "@/lib/utils"
 import { getProduct, getProducts } from "@/server/db/products"
-import { TimezoneDropdownMenuItem } from "../_components/TimezoneDropdownMenuItem"
+import { TimezoneDropdownMenuItem } from "@/app/dashboard/_components/TimezoneDropdownMenuItem"
 
 export default async function AnalyticsPage({
   searchParams,
