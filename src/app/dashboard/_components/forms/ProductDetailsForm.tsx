@@ -19,6 +19,7 @@ import { productDetailsSchema } from "@/schemas/products"
 import { createProduct, updateProduct } from "@/server/actions/products"
 import { useToast } from "@/hooks/use-toast"
 import { RequiredLabelIcon } from "@/components/RequiredLabelIcon"
+import { Loader2 } from "lucide-react"
 
 export function ProductDetailsForm({
   product,
@@ -43,18 +44,38 @@ export function ProductDetailsForm({
   })
 
   async function onSubmit(values: z.infer<typeof productDetailsSchema>) {
-    const action =
-      product == null ? createProduct : updateProduct.bind(null, product.id)
-    const data = await action(values)
+    try {
+      const action = product == null 
+        ? createProduct 
+        : updateProduct.bind(null, product.id)
+      const data = await action(values)
 
-    if (data?.message) {
+      if (data?.message) {
+        toast({
+          title: data.error ? "Error" : "Success",
+          description: data.message,
+          variant: data.error ? "destructive" : "default",
+        })
+      }
+
+      if (!data?.error && product == null) {
+        // Reset form after successful creation
+        form.reset({
+          name: "",
+          url: "",
+          description: "",
+        })
+      }
+    } catch (error) {
       toast({
-        title: data.error ? "Error" : "Success",
-        description: data.message,
-        variant: data.error ? "destructive" : "default",
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
       })
     }
   }
+
+  const isSubmitting = form.formState.isSubmitting
 
   return (
     <Form {...form}>
@@ -68,12 +89,16 @@ export function ProductDetailsForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
+                <FormLabel className="flex items-center gap-1">
                   Product Name
                   <RequiredLabelIcon />
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input 
+                    {...field} 
+                    placeholder="Enter product name"
+                    disabled={isSubmitting}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -84,12 +109,17 @@ export function ProductDetailsForm({
             name="url"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  Enter your website URL
+                <FormLabel className="flex items-center gap-1">
+                  Website URL
                   <RequiredLabelIcon />
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input 
+                    {...field} 
+                    placeholder="https://example.com/product"
+                    disabled={isSubmitting}
+                    type="url"
+                  />
                 </FormControl>
                 <FormDescription>
                   Include the protocol (http/https) and the full path to the
@@ -107,7 +137,12 @@ export function ProductDetailsForm({
             <FormItem>
               <FormLabel>Product Description</FormLabel>
               <FormControl>
-                <Textarea className="min-h-20 resize-none" {...field} />
+                <Textarea 
+                  className="min-h-20 resize-none" 
+                  placeholder="Enter product description (optional)"
+                  disabled={isSubmitting}
+                  {...field} 
+                />
               </FormControl>
               <FormDescription>
                 An optional description to help distinguish your product from
@@ -118,8 +153,20 @@ export function ProductDetailsForm({
           )}
         />
         <div className="self-end">
-          <Button disabled={form.formState.isSubmitting} type="submit">
-            Save
+          <Button 
+            disabled={isSubmitting} 
+            type="submit"
+            size="lg"
+            className="min-w-[100px]"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              'Save'
+            )}
           </Button>
         </div>
       </form>
