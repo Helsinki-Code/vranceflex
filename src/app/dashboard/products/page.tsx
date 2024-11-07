@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server"
-import { NoProducts } from "../_components/NoProducts"
-import { ProductGrid } from "../_components/ProductGrid"
+import { NoProducts } from "@/app/dashboard/_components/NoProducts"
+import { ProductGrid } from "@/app/dashboard/_components/ProductGrid"
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "lucide-react"
 import Link from "next/link"
