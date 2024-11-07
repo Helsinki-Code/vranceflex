@@ -5,8 +5,7 @@ const nextConfig = {
       dynamic: 0,
     },
   },
-  // Add this to ensure compatibility with Cloudflare Pages
-  output: 'standalone',
+  output: 'standalone', // Add this for Cloudflare Pages
   images: {
     unoptimized: true, // Required for Cloudflare Pages
     domains: ['clerk.vranceflex.online'],
